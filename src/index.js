@@ -170,7 +170,8 @@ export default class extends Component {
     autoplayTimeout: 2.5,
     autoplayDirection: true,
     index: 0,
-    onIndexChanged: () => null
+    onIndexChanged: () => null,
+    hasFloatingParent: false,
   }
 
   /**
@@ -461,7 +462,7 @@ export default class extends Component {
     if (state.dir === 'x') x = diff * state.width
     if (state.dir === 'y') y = diff * state.height
 
-    if (Platform.OS !== 'ios') {
+    if (Platform.OS !== 'ios' && !this.props.hasFloatingParent) {
       this.scrollView && this.scrollView[animated ? 'setPage' : 'setPageWithoutAnimation'](diff)
     } else {
       this.scrollView && this.scrollView.scrollTo({ x, y, animated })
@@ -620,7 +621,7 @@ export default class extends Component {
   }
 
   renderScrollView = pages => {
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios' || this.props.hasFloatingParent) {
       return (
         <ScrollView ref={this.refScrollView}
           {...this.props}
@@ -658,7 +659,7 @@ export default class extends Component {
       index,
       total,
       width,
-      height
+      height,
     } = this.state;
     const {
       children,
